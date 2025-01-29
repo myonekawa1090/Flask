@@ -1,0 +1,9 @@
+blinker
+click
+flask
+importlib-metadata
+itsdangerous
+jinja2
+markupsafe
+werkzeug
+zipp
