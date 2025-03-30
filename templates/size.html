@@ -1,3 +1,64 @@
-{% for i in range(size) -%}
-a
-{% endfor -%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Testing Suite - Size Test</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Size Test Results</h1>
+        <a href="/" class="nav-link" style="margin-bottom: 2rem;">
+            <div>
+                <span class="link-title">← Back to Home</span>
+            </div>
+        </a>
+
+        <div class="info-section">
+            <div class="info-title">Test Configuration</div>
+            <div class="input-group">
+                <label for="payloadSize">Payload Size (bytes):</label>
+                <input type="number" 
+                       id="payloadSize" 
+                       value="{{ size }}" 
+                       min="1" 
+                       max="1000000" 
+                       class="input-field">
+                <button onclick="updateSize()" class="action-button">Generate</button>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <div class="info-title">Current Test Results</div>
+            <div class="header-item">
+                <span class="header-key">REQUESTED SIZE</span>
+                <span class="header-value">{{ size }} bytes</span>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <div class="info-title">Test Data</div>
+            <div style="color: #888; font-family: monospace; overflow-wrap: break-word;">
+                {% for _ in range(size) %}X{% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateSize() {
+            const payloadSize = document.getElementById('payloadSize').value;
+            if (payloadSize > 0) {
+                window.location.href = `/size/?v=${payloadSize}`;
+            }
+        }
+
+        // Enter キーでも実行できるように
+        document.getElementById('payloadSize').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                updateSize();
+            }
+        });
+    </script>
+</body>
+</html>

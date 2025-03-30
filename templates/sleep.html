@@ -1,14 +1,93 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-    <title>My Flask App</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Testing Suite - Latency Test</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        /* 前回と同じスタイル定義をここに含める */
+
+        .result-badge {
+            display: inline-block;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            background: #00ff8833;
+            color: #00ff88;
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .result-badge .unit {
+            font-size: 1rem;
+            opacity: 0.8;
+            margin-left: 0.5rem;
+        }
+    </style>
 </head>
-
 <body>
-    <h1>This is Sleep page. </h1>
+    <div class="container">
+        <h1>Latency Test Results</h1>
+        <a href="/" class="nav-link" style="margin-bottom: 2rem;">
+            <div>
+                <span class="link-title">← Back to Home</span>
+            </div>
+        </a>
 
-    <p>Sleep timer: {{ time }}!</p>
+        <div class="info-section">
+            <div class="info-title">Test Configuration</div>
+            <div class="input-group">
+                <label for="sleepTime">Delay Time (seconds):</label>
+                <input type="number" 
+                       id="sleepTime" 
+                       value="{{ time }}" 
+                       min="1" 
+                       max="6000" 
+                       class="input-field">
+                <button onclick="updateSleep()" class="action-button">Test</button>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <div class="info-title">Current Test Results</div>
+            <div class="header-item">
+                <span class="header-key">DELAY TIME</span>
+                <span class="header-value">{{ time }} seconds</span>
+            </div>
+        </div>
+
+        <div class="info-section" style="text-align: center;">
+            <div class="info-title">Response Time</div>
+            <div class="result-badge">
+                {{ time }}<span class="unit">seconds</span>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <div class="info-title">Usage Guide</div>
+            <div style="color: #888;">
+                <p>Add ?v=X to the URL to set a custom delay time, where X is the number of seconds.</p>
+                <p>Example: <code style="color: #00ff88;">/sleep/?v=5</code> for a 5-second delay</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateSleep() {
+            const sleepTime = document.getElementById('sleepTime').value;
+            if (sleepTime > 0) {
+                window.location.href = `/sleep/?v=${sleepTime}`;
+            }
+        }
+
+        // Enter キーでも実行できるように
+        document.getElementById('sleepTime').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                updateSleep();
+            }
+        });
+    </script>
 </body>
-
 </html>

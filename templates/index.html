@@ -1,23 +1,68 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-    <title>networking test tool</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Testing Suite</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-
 <body>
-    <p>Source IPs: {{ ip }}!</p>
-    <p>Base URL: {{ baseurl }}</p>
-    <p>Header: {{ headers }}</p>
+    <div class="container">
+        <h1>Network Testing Suite</h1>
+        
+        <div class="info-section">
+            <div class="info-title">Connection Details</div>
+            <div class="header-item">
+                <span class="header-key">SOURCE IP</span>
+                <span class="header-value">{{ ip }}</span>
+            </div>
+            <div class="header-item">
+                <span class="header-key">BASE URL</span>
+                <span class="header-value">{{ baseurl }}</span>
+            </div>
+        </div>
 
-    <ul>
-        <li>
-            <a href="/sleep/">/Sleep/?v= (v=sleep timer)</sleep></a>
-        </li>
-        <li>
-            <a href="/size/">/Size/?v= (v=file size you need)</a>
-        </li>
-    </ul>
+        <div class="header-section">
+            <div class="info-title">Primary Headers</div>
+            {% for key, value in headers.important.items() %}
+                {% if value %}
+                    <div class="header-item">
+                        <span class="header-key">{{ key }}</span>
+                        <span class="header-value">{{ value }}</span>
+                    </div>
+                {% endif %}
+            {% endfor %}
+
+            <div class="info-title" style="margin-top: 2rem;">Additional Headers</div>
+            {% for key, value in headers.other.items() %}
+                <div class="header-item">
+                    <span class="header-key">{{ key }}</span>
+                    <span class="header-value">{{ value }}</span>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="info-title" style="margin-top: 2rem;">Testing Tools</div>
+        <ul class="nav-links">
+            <li>
+                <a href="/sleep/" class="nav-link">
+                    <div>
+                        <span class="link-title">Latency Test</span>
+                        <span class="status-badge">SLEEP</span>
+                        <div class="link-description">Set custom response delay (?v=seconds)</div>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a href="/size/" class="nav-link">
+                    <div>
+                        <span class="link-title">Payload Test</span>
+                        <span class="status-badge">SIZE</span>
+                        <div class="link-description">Generate specific response size (?v=bytes)</div>
+                    </div>
+                </a>
+            </li>
+        </ul>
+    </div>
 </body>
-
 </html>

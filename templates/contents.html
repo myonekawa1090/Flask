@@ -1,21 +1,41 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-    <title>My Flask App</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Testing Suite - Contents</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-
 <body>
-    <h1>This is contents page</h1>
+    <div class="container">
+        <h1>Network Testing Suite</h1>
+        <a href="/" class="nav-link" style="margin-bottom: 2rem;">
+            <div>
+                <span class="link-title">← Back to Home</span>
+            </div>
+        </a>
+        
+        <div class="info-section">
+            <div class="info-title">Connection Details</div>
+            <div class="header-item">
+                <span class="header-key">SOURCE IP</span>
+                <span class="header-value">{{ ip }}</span>
+            </div>
+            <div class="header-item">
+                <span class="header-key">BASE URL</span>
+                <span class="header-value">{{ baseurl }}</span>
+            </div>
+        </div>
 
-    <p>This is from {{ ip }}!</p>
-    <p>Base URL is {{ baseurl }}</p>
-
-    <ul>
-        {% for item in items %}
-        <li>{{ item }}</li>
-        {% endfor %}
-    </ul>
+        <div class="header-section">
+            <div class="info-title">Headers Information</div>
+            {% for key, value in headers.items() %}
+                <div class="header-item">
+                    <span class="header-key">{{ key }}</span>
+                    <span class="header-value">{{ value }}</span>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
 </body>
-
 </html>
