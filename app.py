@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request
 import time
 from typing import Optional
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -44,6 +45,15 @@ def hello_world():
     ip = get_client_ip()
     baseurl = request.base_url
     formatted_headers = format_headers(request.headers)
+    
+    # シンプルモードの判定
+    is_simple_mode = request.args.get('mode') == 'simple'
+    
+    if is_simple_mode:
+        current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        status_code = 200
+        return f"{current_time} - IP: {ip} - Status: {status_code}", status_code
+    
     return render_template('index.html', 
                          ip=ip, 
                          baseurl=baseurl, 
@@ -64,10 +74,22 @@ def size():
     try:
         size_param = request.args.get('v')
         if size_param is None or not size_param.isnumeric():
+            if request.args.get('mode') == 'simple':
+                current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                ip = get_client_ip()
+                return f"{current_time} - IP: {ip} - Status: 200", 200
             return render_template('size.html', size=1)
         size_value = max(1, min(int(size_param), 100))  # 1から100の範囲に制限
+        if request.args.get('mode') == 'simple':
+            current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            ip = get_client_ip()
+            return f"{current_time} - IP: {ip} - Status: 200", 200
         return render_template('size.html', size=size_value)
     except ValueError:
+        if request.args.get('mode') == 'simple':
+            current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            ip = get_client_ip()
+            return f"{current_time} - IP: {ip} - Status: 200", 200
         return render_template('size.html', size=1)
 
 @app.route('/sleep/')   
@@ -76,13 +98,25 @@ def sleep():
         sleep_param = request.args.get('v')
         if sleep_param is None or not sleep_param.isnumeric():
             time.sleep(1)
+            if request.args.get('mode') == 'simple':
+                current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                ip = get_client_ip()
+                return f"{current_time} - IP: {ip} - Status: 200", 200
             return render_template('sleep.html', time=1)
         
         sleep_time = min(int(sleep_param), MAX_SLEEP_TIME)  # 上限を設定
         time.sleep(sleep_time)
-        return render_template('sleep.html', time=sleep_time), 408
+        if request.args.get('mode') == 'simple':
+            current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            ip = get_client_ip()
+            return f"{current_time} - IP: {ip} - Status: 200", 200
+        return render_template('sleep.html', time=sleep_time), 200
     except ValueError:
         time.sleep(1)
+        if request.args.get('mode') == 'simple':
+            current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            ip = get_client_ip()
+            return f"{current_time} - IP: {ip} - Status: 200", 200
         return render_template('sleep.html', time=1)
 
 @app.route('/health/')   
