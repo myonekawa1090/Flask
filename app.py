@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect
 import time
 from typing import Optional
 from datetime import datetime
@@ -118,6 +118,13 @@ def sleep():
             ip = get_client_ip()
             return f"{current_time} - IP: {ip} - Status: 200", 200
         return render_template('sleep.html', time=1)
+
+@app.route('/redirect/')   
+def redirect_test():
+    url = request.args.get('url', '/')
+    if url != '/' and not url.startswith(('http://', 'https://')):
+        url = f'https://{url}'
+    return redirect(url, code=302)
 
 @app.route('/health/')   
 def health():
