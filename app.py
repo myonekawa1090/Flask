@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, make_response
 import time
 from typing import Optional
 from datetime import datetime
@@ -119,12 +119,30 @@ def sleep():
             return f"{current_time} - IP: {ip} - Status: 200", 200
         return render_template('sleep.html', time=1)
 
-@app.route('/redirect/')   
+@app.route('/redirect/', methods=['GET', 'OPTIONS'])   
 def redirect_test():
+    # Handle preflight OPTIONS request
+    if request.method == 'OPTIONS':
+        response = make_response('', 200)
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+        response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization, X-Requested-With'
+        response.headers['Access-Control-Allow-Credentials'] = 'true'
+        return response
+    
     url = request.args.get('url', '/')
     if url != '/' and not url.startswith(('http://', 'https://')):
         url = f'https://{url}'
-    return redirect(url, code=302)
+    
+    response = make_response(redirect(url, code=302))
+    
+    # CORS headers
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization, X-Requested-With'
+    response.headers['Access-Control-Allow-Credentials'] = 'true'
+    
+    return response
 
 @app.route('/health/')   
 def health():
